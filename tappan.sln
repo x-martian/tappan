@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "geo", "geo\geo.vcxproj", "{0B3B1C73-7053-4788-8ECA-C77EE34AD2CE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tests", "geo\tests\tests.vcxproj", "{1092BEFB-6DBE-4ACC-89E4-A9C25D764591}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "suites", "suites", "{B8D36943-7B50-4410-880E-F3FA55427B49}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PolygonAreaTest", "geo\tests\PolygonAreaTest\PolygonAreaTest.vcxproj", "{D4E80A4B-08D4-4551-A6D1-10CBBE4AAD51}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0B3B1C73-7053-4788-8ECA-C77EE34AD2CE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0B3B1C73-7053-4788-8ECA-C77EE34AD2CE}.Debug|Win32.Build.0 = Debug|Win32
+		{0B3B1C73-7053-4788-8ECA-C77EE34AD2CE}.Release|Win32.ActiveCfg = Release|Win32
+		{0B3B1C73-7053-4788-8ECA-C77EE34AD2CE}.Release|Win32.Build.0 = Release|Win32
+		{1092BEFB-6DBE-4ACC-89E4-A9C25D764591}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1092BEFB-6DBE-4ACC-89E4-A9C25D764591}.Debug|Win32.Build.0 = Debug|Win32
+		{1092BEFB-6DBE-4ACC-89E4-A9C25D764591}.Release|Win32.ActiveCfg = Release|Win32
+		{1092BEFB-6DBE-4ACC-89E4-A9C25D764591}.Release|Win32.Build.0 = Release|Win32
+		{D4E80A4B-08D4-4551-A6D1-10CBBE4AAD51}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D4E80A4B-08D4-4551-A6D1-10CBBE4AAD51}.Debug|Win32.Build.0 = Debug|Win32
+		{D4E80A4B-08D4-4551-A6D1-10CBBE4AAD51}.Release|Win32.ActiveCfg = Release|Win32
+		{D4E80A4B-08D4-4551-A6D1-10CBBE4AAD51}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D4E80A4B-08D4-4551-A6D1-10CBBE4AAD51} = {B8D36943-7B50-4410-880E-F3FA55427B49}
+	EndGlobalSection
+EndGlobal

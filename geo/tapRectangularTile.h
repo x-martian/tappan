@@ -21,22 +21,38 @@ public:
 	{
 	}
 
-	// Determine if a point is inside the rectangle or not
-	inline static bool Hit(const Coordinate& size, const Coordinate& pt)
-	{
-		return (
-			   pt.first>=0.0 && pt.first<size.first
-			&& pt.second>=0 && pt.second<size.second
-			);
-	}
+    inline static bool HitRow(const Coordinate& size, const Coordinate& pt)
+    {
+        return
+            size.first>0.0 ?
+            pt.first>=0.0 && pt.first<size.first :
+        pt.first<=0.0 && pt.first>size.first;
+    }
 
-	inline static bool Miss(const Coordinate& size, const Coordinate& pt)
-	{
-		return (
-			   pt.first<0.0 || pt.first>=size.first
-			|| pt.second<0 || pt.second>=size.second
-			);
-	}
+    // Determine if a point is inside the rectangle or not
+    inline static bool HitColumn(const Coordinate& size, const Coordinate& pt)
+    {
+        return
+            size.second>0.0 ?
+            pt.second>=0.0 && pt.second<size.second :
+        pt.second<=0.0 && pt.second>size.second;
+    }
+
+    inline static int MissRow(const Coordinate& size, const Coordinate& pt)
+    {
+        return
+            size.second>0.0 ?
+            pt.second<0.0 || pt.second>=size.second :
+        pt.second>0.0 || pt.second<=size.second;
+    }
+
+    inline static int MissColumn(const Coordinate& size, const Coordinate& pt)
+    {
+        return
+            size.first>0.0 ?
+            pt.first<0.0 || pt.first>=size.first :
+        pt.first>0.0 || pt.first<=size.first;
+    }
 
 	// direction are defined as the following: 
 	//  13       12
@@ -48,7 +64,24 @@ public:
 	// or: 0000-left, 0001-down, 0010-right, 0011-up
 	inline static Direction GetDirection(const Coordinate& size, const Coordinate& in, const Coordinate& out)
 	{
-		Direction direction = {0, 0.0};
+        if (size.first>0 && size.second>0)
+            return GetDirectionImpl(size, in, out);
+        else if (size.first<0 && size.second<0) {
+            Coordinate _size(-size.first, -size.second);
+            Coordinate _in(-in.first, -in.second);
+            Coordinate _out(-out.first, -out.second);
+            Direction direction = GetDirectionImpl(_size, _in, _out);
+            direction.position = -direction.position;
+            return direction;
+        } else {
+            throw std::exception("not implemented");
+        }
+    }
+
+    inline static Direction GetDirectionImpl(const Coordinate& size, const Coordinate& in, const Coordinate& out)
+    {
+        Direction direction = {0, 0.0};
+        //if (MissRow(size, out) && MissColumn(size, out)) {
 		if ((out.first<0.0||out.first>=size.first) && (out.second<0.0||out.second>=size.second)) {
 			double fx = (out.first - (out.first<0.0?0.0:size.first))/(out.first-in.first);
 			double fy = (out.second- (out.second<0.0?0.0:size.second))/(out.second-in.second);
@@ -81,6 +114,7 @@ public:
 						direction.edge = 1;
 				}
 			}
+		//} else if (MissColumn(size, out)) {
 		} else if (out.first<0.0||out.first>=size.first) {
 			if (out.first<0.0) {
 				double f = out.first==in.first ? 0.5 : (out.first)/(out.first-in.first);
@@ -90,6 +124,7 @@ public:
 				double f = out.first==in.first ? 0.5 : (out.first-size.first)/(out.first-in.first);
 				direction.position = out.second*(1.0-f) + in.second*f;
 			}
+		//} else if (MissRow(size, out)) {
 		} else if (out.second<0.0||out.second>=size.second) {
 			if (out.second<0.0) {
 				double f = out.second==in.second? 0.5 : (out.second)/(out.second-in.second);
@@ -249,6 +284,12 @@ public:
 		return vertex;
 	}
 
+    /** translate a coordinate from a reference frame based on one vertex (RFV)
+        to that of another.
+        @param size, the size of the tile.
+        @param a, the RFV to translante the coordinate to.
+        @param b, the RFV the input coordinate is based on.
+        @param coordinate, the coordinate to be translated. */
 	inline static void TranslateCoordinate(const Coordinate& size, const Vertex& a, const Vertex& b, Coordinate& coordinate)
 	{
 		if (a.first > b.first)
@@ -262,4 +303,3 @@ public:
 			coordinate.second += size.second;
 	}
 };
-

@@ -26,7 +26,7 @@ public:
 
 		Area tileArea = g.GetTileArea();
 
-		std::map<unsigned, std::map<unsigned, int> > counts;
+		std::map<int, std::map<int, int> > counts;
 		Path::iterator a = path.end();
 		--a;
 		Path::iterator b = path.begin();
@@ -35,13 +35,19 @@ public:
 		if (length != 0) {
 			assert(length==1 || length==-1);
 			assert(a->second == b->second);
-			std::map<unsigned, int>& column = counts[length>0?a->first:b->first];
-			std::map<unsigned, int>::iterator itr = column.end();
-			for (unsigned j=0; j<a->second; ++j)
+			std::map<int, int>& column = counts[length>0?a->first:b->first];
+			std::map<int, int>::iterator itr = column.end();
+			for (int j=0; j<a->second; ++j)
 				if ((itr=column.find(j)) != column.end())
 					itr->second += length;
 				else
-					column.insert(std::pair<unsigned, int>(j, length));
+					column.insert(std::pair<int, int>(j, length));
+
+            for (int j=a->second; j<0; ++j)
+                if ((itr=column.find(j)) != column.end())
+                    itr->second -= length;
+                else
+                    column.insert(std::pair<unsigned, int>(j, -length));
 		}
 
 		do {
@@ -51,20 +57,27 @@ public:
 			if (length != 0) {
 				assert(length==1 || length==-1);
 				assert(a->second == b->second);
-				std::map<unsigned, int>& column = counts[length>0?a->first:b->first];
-				std::map<unsigned, int>::iterator itr = column.end();
-				for (unsigned j=0; j<a->second; ++j)
+				std::map<int, int>& column = counts[length>0?a->first:b->first];
+				std::map<int, int>::iterator itr = column.end();
+                // count points up
+				for (int j=0; j<a->second; ++j)
 					if ((itr=column.find(j)) != column.end())
 						itr->second += length;
 					else
 						column.insert(std::pair<unsigned, int>(j, length));
+                // count points down
+                for (int j=a->second; j<0; ++j)
+					if ((itr=column.find(j)) != column.end())
+						itr->second -= length;
+					else
+						column.insert(std::pair<unsigned, int>(j, -length));
 			}
 			path.pop_back();
 		} while (a!=path.begin());
 
-		std::map<unsigned, std::map<unsigned, int> >::iterator p = counts.begin();
+		std::map<int, std::map<int, int> >::iterator p = counts.begin();
 		while (p!=counts.end()) {
-			std::map<unsigned, int>::iterator q = p->second.begin();
+			std::map<int, int>::iterator q = p->second.begin();
 			while (q!=p->second.end()) {
 				Weight w = g.GetWeight(Vertex(p->first, q->first));
 				if (q->second != 0)

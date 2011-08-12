@@ -60,16 +60,19 @@ public:
 
 		// find the world coordinate of the local origin, and transform
 		// the current point from world to local coordinate
-		Vertex vertex = g.WorldToVertex(*firstPolygonPoint);
-		Coordinate origin = g.VertexToWorld(vertex);
-		Coordinate trailingPointCoordinate = g.WorldToLocal(*firstPolygonPoint, origin);
+        Vertex vertex;
+        g.WorldToVertex(*firstPolygonPoint, vertex);
+        Coordinate origin;
+        g.VertexToWorld(vertex, origin);
+        Coordinate trailingPointCoordinate;
+        g.WorldToLocal(origin, *firstPolygonPoint, trailingPointCoordinate);
 		
 		Weight w = g.GetWeight(vertex);
 
 		// search forward for the next point in polygon that fails outside of the current tile.
 		Coordinate leadingPointCoordinate;
 		while (++head != c.GetPolygonEnd()) {
-			leadingPointCoordinate = g.WorldToLocal(*head, origin);
+			g.WorldToLocal(origin, *head, leadingPointCoordinate);
 			if (!g.HitCurrentTile(vertex, leadingPointCoordinate))
 				break;
 			else
@@ -83,7 +86,7 @@ public:
 		if (head == c.GetPolygonEnd()) {
 			// the polygon has never stepped out of one tile, so we will
 			// compute area contribution from the last segment and return
-			leadingPointCoordinate = g.WorldToLocal(*firstPolygonPoint, origin);
+			g.WorldToLocal(origin, *firstPolygonPoint, leadingPointCoordinate);
 			r.Accumulate(g.ComputeArea(vertex, trailingPointCoordinate, leadingPointCoordinate), w);
 			return path;
 		}
@@ -103,10 +106,10 @@ public:
 		--head;
 
 		// now we'll turn to the tail and iterate backwards alone the polygon.
-		trailingPointCoordinate = g.WorldToLocal(*firstPolygonPoint, origin);
+		g.WorldToLocal(origin, *firstPolygonPoint, trailingPointCoordinate);
 		while (tail != head) {
 			--tail;
-			leadingPointCoordinate = g.WorldToLocal(*tail, origin);
+			g.WorldToLocal(origin, *tail, leadingPointCoordinate);
 
 			while (!g.HitCurrentTile(vertex, leadingPointCoordinate)) {
 				// work off the tiles between points local and next
@@ -119,17 +122,19 @@ public:
 
 				// now close the section with the tile boundary
 				// push the vertices into the replacement polygon
+				bool insertVertex = true;
 				while (g.EdgeMismatch(vertex, entry, exit)) {
 					Area area = g.ComputeIncrementalArea(vertex, exit);
 					r.Accumulate(area, w);
-					g.RotateDirectionCounterClockwise(vertex, exit, path);
+					g.RotateDirectionCounterClockwise(vertex, exit, path, insertVertex);
+					insertVertex = true;
 				}
 
 				r.Accumulate(g.ComputeIncrementalArea(vertex, exit, entry), w);
 				
 				// move to the next tile, based on the point of exit
 				Vertex destVertex = g.MoveReference(vertex, entry, exit);
-				origin = g.VertexToWorld(destVertex);
+				g.VertexToWorld(destVertex, origin);
 				g.TranslateCoordinate(destVertex, vertex, leadingPointCoordinate);
 
 				vertex = destVertex;

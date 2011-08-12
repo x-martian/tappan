@@ -9,8 +9,13 @@ class tapPolygonAreaSuiteImpl
 {
 public:
     tapPolygonAreaSuiteImpl()
-        : g0(10, 10, 0.0, 0.0, 1.0, 1.0)	// square tile
-        , g1(10, 10, -0.3, -0.1, 10.0/9.0, 0.9)	// rectangular tile
+        : g0(10, 10, 0.0, 0.0, 1.0, 1.0)        // square tile
+        , g1(10, 10, -0.3, -0.1, 10.0/9.0, 0.9) // rectangular tile
+        , g2(1, 1, -0.3, -0.1, 10.3, 9.7)       // all polygons are within one tile
+        , g3(1, 4, 0.0001, 0.001, 10.5, 2.7)    // the polygons enter and leave tile from the edge
+        , g4(1, 4, 0.0001, 0.001, 2.6, 12.7)    // the polygons enter and leave tile from the edge
+        , g5(10, 10, 10.0, 10.0, -1.0, -1.0)    // negative pixel spacing
+        , g6(3, 3, 3.0, 3.0, -2.0, -2.0)
     {}
 
     // A square of 3.0x3.0 drawn counterclockwise
@@ -85,7 +90,7 @@ public:
         t.is(r1.TotalArea(), -9.0, 0.0001, "Total area of a 3.0x3.0 square is -9.0");
     }
 
-    // trianglar contour, with the diagnol line passes through vertices
+    // trianglar polygon, with the diagnol line passes through vertices
     static void Area_TrianglarPolygon_3x3_counterclockwise(tapPolygonAreaSuiteImpl& me, lemon::test<>& t)
     {
         typedef Polygon::Point Point;
@@ -107,7 +112,7 @@ public:
         t.is(r1.TotalArea(), 4.5, 0.0001, "Total area of a 3.0x3.0 triangle is 4.5");
     }
 
-    // clockwise contour triangluar, with all points on vertices
+    // clockwise polygon triangluar, with all points on vertices
     static void Area_TrianglarPolygon_Integer_Vertices(tapPolygonAreaSuiteImpl& me, lemon::test<>& t)
     {
         typedef Polygon::Point Point;
@@ -127,7 +132,7 @@ public:
         t.is(r1.TotalArea(), -.5, 0.0001, "Total area of a 1.0x1.0 triangle is -0.5");
     }
 
-    // small counterclockwise contour triangluar, all points on vertices
+    // small counterclockwise polygon triangluar, all points on vertices
     static void Area_TrianglarPolygon_Integer_Vertices_CCW(tapPolygonAreaSuiteImpl& me, lemon::test<>& t)
     {
         typedef Polygon::Point Point;
@@ -145,6 +150,46 @@ public:
         Geometry::Path path1 = tapPolygonArea<Geometry, Polygon, Result, true>::Compute(me.g1, p, r1);
         r1.ComputePathArea(me.g1, path1);
         t.is(r1.TotalArea(), .5, 0.0001, "Total area of a ccw 1.0x1.0 triangle is 0.5");
+    }
+
+    // ccw diamond
+    static void Area_Diamond_CCW(tapPolygonAreaSuiteImpl& me, lemon::test<>& t)
+    {
+        typedef Polygon::Point Point;
+        Polygon p;
+        p.Append(Point( sqrt(2.0), 0.0));
+        p.Append(Point(0.0,  sqrt(2.0)));
+        p.Append(Point(-sqrt(2.0), 0.0));
+        p.Append(Point(0.0, -sqrt(2.0)));
+
+        Result r0(-1.0, 100.1, 10), r1(-100.0, 555.1, 10);
+        Geometry::Path path0 = tapPolygonArea<Geometry, Polygon, Result, true>::Compute(me.g0, p, r0);
+        r0.ComputePathArea(me.g0, path0);
+        t.is(r0.TotalArea(), 4.0, 0.0001, "Total area of a ccw 2.0x2.0 diamond is 4.0");
+
+        Geometry::Path path1 = tapPolygonArea<Geometry, Polygon, Result, true>::Compute(me.g1, p, r1);
+        r1.ComputePathArea(me.g1, path1);
+        t.is(r1.TotalArea(), 4.0, 0.0001, "Total area of a ccw 2.0x2.0 diamond is 4.0");
+    }
+
+    // cw diamond
+    static void Area_Diamond_CW(tapPolygonAreaSuiteImpl& me, lemon::test<>& t)
+    {
+        typedef Polygon::Point Point;
+        Polygon p;
+        p.Append(Point(0.0, -sqrt(2.0)));
+        p.Append(Point(-sqrt(2.0), 0.0));
+        p.Append(Point(0.0,  sqrt(2.0)));
+        p.Append(Point( sqrt(2.0), 0.0));
+
+        Result r0(-1.0, 100.1, 10), r1(-100.0, 555.1, 10);
+        Geometry::Path path0 = tapPolygonArea<Geometry, Polygon, Result, true>::Compute(me.g0, p, r0);
+        r0.ComputePathArea(me.g0, path0);
+        t.is(r0.TotalArea(), -4.0, 0.0001, "Total area of a cw 2.0x2.0 diamond is -4.0");
+
+        Geometry::Path path1 = tapPolygonArea<Geometry, Polygon, Result, true>::Compute(me.g1, p, r1);
+        r1.ComputePathArea(me.g1, path1);
+        t.is(r1.TotalArea(), -4.0, 0.0001, "Total area of a cw 2.0x2.0 diamond is -4.0");
     }
 
     // irregularly shaped polygon
@@ -196,7 +241,7 @@ public:
     }
 
 private:
-    Geometry g0, g1;
+    Geometry g0, g1, g2, g3, g4, g5, g6;
 };
 
 tapPolygonAreaSuite::tapPolygonAreaSuite(void)
@@ -218,6 +263,8 @@ bool tapPolygonAreaSuite::Run()
     tapPolygonAreaSuiteImpl::Area_TrianglarPolygon_3x3_counterclockwise(impl, t);
     tapPolygonAreaSuiteImpl::Area_TrianglarPolygon_Integer_Vertices(impl, t);
     tapPolygonAreaSuiteImpl::Area_TrianglarPolygon_Integer_Vertices_CCW(impl, t);
+    tapPolygonAreaSuiteImpl::Area_Diamond_CCW(impl, t);
+    tapPolygonAreaSuiteImpl::Area_Diamond_CW(impl, t);
     tapPolygonAreaSuiteImpl::Irregularly_Shaped_Polygon(impl, t);
     tapPolygonAreaSuiteImpl::Self_Intersecting_Polygon(impl, t);
 

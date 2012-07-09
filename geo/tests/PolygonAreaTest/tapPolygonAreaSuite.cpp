@@ -10,7 +10,7 @@ class tapPolygonAreaSuiteImpl
 public:
     tapPolygonAreaSuiteImpl()
         : g0(10, 10, 0.0, 0.0, 1.0, 1.0)        // square tile
-        , g1(10, 10, -0.3, -0.1, 10.0/9.0, 0.9) // rectangular tile
+        , g1(10, 10, -0.3, -0.1, 1.0/9.0, 0.09) // rectangular tile
         , g2(1, 1, -0.3, -0.1, 10.3, 9.7)       // all polygons are within one tile
         , g3(1, 4, 0.0001, 0.001, 10.5, 2.7)    // the polygons enter and leave tile from the edge
         , g4(1, 4, 0.0001, 0.001, 2.6, 12.7)    // the polygons enter and leave tile from the edge

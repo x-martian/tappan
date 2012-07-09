@@ -82,6 +82,9 @@
     <ClCompile Include="tests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="ConcaveScanTest\ConcaveScanTest.vcxproj">
+      <Project>{a44347e3-722e-4477-9f31-bac14d0ac109}</Project>
+    </ProjectReference>
     <ProjectReference Include="PolygonAreaTest\PolygonAreaTest.vcxproj">
       <Project>{d4e80a4b-08d4-4551-a6d1-10cbbe4aad51}</Project>
       <Private>true</Private>

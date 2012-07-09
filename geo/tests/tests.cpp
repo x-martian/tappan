@@ -2,12 +2,14 @@
 //
 
 #include "stdafx.h"
+#include "ConcaveScanTest/tapConcaveScanSuite.h"
 #include "PolygonAreaTest/tapPolygonAreaSuite.h"
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	tapPolygonAreaSuite::Run();
+    tapConcaveScanSuite::Run();
+    tapPolygonAreaSuite::Run();
 
-	return 0;
+    return 0;
 }
 

@@ -3,8 +3,11 @@
 #include <vector>
 #include <assert.h>
 
+/** Supporting routines for geometries consisting vertices forming rectangular lattices. */
 template<typename G> class tapRectangularTile
 {
+    typedef typename G::RowIndex RowIndex;
+    typedef typename G::ColIndex ColIndex;
 	typedef typename G::Vertex Vertex;
 	typedef typename G::Coordinate Coordinate;
 	typedef typename G::Direction Direction;
@@ -302,4 +305,22 @@ public:
 		else if (a.second < b.second)
 			coordinate.second += size.second;
 	}
+
+    inline static void WorldToVertex(const Coordinate& orig, const Coordinate& size, const Coordinate& coordinate, Vertex& vertex)
+    {
+        double tmp = coordinate.first - orig.first;
+        if (tmp > 0.0)
+    		vertex.first = static_cast<RowIndex>(tmp/size.first);
+        else if (tmp < 0.0)
+            vertex.first = static_cast<RowIndex>(tmp/size.first)-1;
+        else
+            vertex.first = 0;
+        tmp = coordinate.second - orig.second;
+        if (tmp > 0.0)
+            vertex.second = static_cast<ColIndex>(tmp/size.second);
+        else if (tmp < 0.0)
+            vertex.second = static_cast<ColIndex>(tmp/size.second)-1;
+        else
+            vertex.second = 0;
+    }
 };

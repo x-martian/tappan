@@ -21,7 +21,7 @@ public:
 
 	// Create a geometry with a weighted pixels.
 	Geometry(unsigned w, unsigned h, double x0, double y0, double dx, double dy)
-		: m_w(w), m_h(h), m_x0(x0), m_y0(y0), m_size(dx, dy)
+        : m_w(w), m_h(h), m_orig(x0,y0), m_size(dx, dy)
 	{
 		m_array = new double[w*h];
 		for (size_t i=0; i<w*h; ++i)
@@ -45,26 +45,13 @@ public:
 
     void WorldToVertex(const Coordinate& coordinate, Vertex& vertex) const
     {
-        double tmp = coordinate.first - m_x0;
-        if (tmp > 0.0)
-    		vertex.first = static_cast<RowIndex>(tmp/m_size.first);
-        else if (tmp < 0.0)
-            vertex.first = static_cast<RowIndex>(tmp/m_size.first)-1;
-        else
-            vertex.first = 0;
-        tmp = coordinate.second - m_x0;
-        if (tmp > 0.0)
-            vertex.second = static_cast<ColIndex>(tmp/m_size.second);
-        else if (tmp < 0.0)
-            vertex.second = static_cast<ColIndex>(tmp/m_size.second)-1;
-        else
-            vertex.second = 0;
+        tapRectangularTile<Geometry>::WorldToVertex(m_orig, m_size, coordinate, vertex);
     }
 
     void VertexToWorld(const Vertex& v, Coordinate& coordinate) const
     {
-        coordinate.first = m_x0+double(v.first)*m_size.first;
-        coordinate.second = m_y0+double(v.second)*m_size.second;
+        coordinate.first = m_orig.first + double(v.first)*m_size.first;
+        coordinate.second = m_orig.second + double(v.second)*m_size.second;
     }
 
 	// convert from world coordinate to the coordinate local to the current tile
@@ -150,7 +137,7 @@ public:
 	}
 
 private:
-	double m_x0, m_y0;
+    Coordinate m_orig;
 	Coordinate m_size;
 	unsigned m_w, m_h;
 	double* m_array;

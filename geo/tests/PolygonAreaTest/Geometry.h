@@ -4,6 +4,8 @@
 #include <map>
 #include <assert.h>
 
+namespace {
+
 // This Geometry class represents rectanular pixels arranged in rows and
 // columns.  Vertex is a interger pair identifies a pixels of this class by
 // its column position and row position.  These position indices are zero based.
@@ -22,8 +24,8 @@ public:
 	// Create a geometry with a weighted pixels.
 	Geometry(unsigned w, unsigned h, double x0, double y0, double dx, double dy)
         : m_w(w), m_h(h), m_orig(x0,y0), m_size(dx, dy)
+        , m_array(new double[w*h])
 	{
-		m_array = new double[w*h];
 		for (size_t i=0; i<w*h; ++i)
 			m_array[i] = i*3.1415926;
 	}
@@ -142,3 +144,5 @@ private:
 	unsigned m_w, m_h;
 	double* m_array;
 };
+
+}

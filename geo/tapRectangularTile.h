@@ -13,7 +13,7 @@ template<typename G> class tapRectangularTile
 	typedef typename G::Direction Direction;
 	typedef typename G::Area Area;
 
-	enum {PLUS=2, DIAG=4};	// i.e. the second and the third bits from the right
+	enum {PLUS=2, DIAG=4};	// i.e. the second and the forth bits from the right
 public:
 
 	tapRectangularTile(void)
@@ -283,6 +283,9 @@ public:
 			exit.position = size.first - entry.position;
 			break;
 		}
+
+        assert(vertex.first>=0);
+        assert(vertex.second>=0);
 
 		return vertex;
 	}

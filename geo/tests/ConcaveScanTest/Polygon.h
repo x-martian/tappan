@@ -2,36 +2,39 @@
 #include <vector>
 #include "Geometry.h"
 
-class Polygon
-{
-public:
-    typedef Geometry::Coordinate Point;
-	typedef Geometry::Coordinate Point;
-	typedef std::vector<Point>::const_iterator PointID;
-	typedef std::pair<double, double> Intersect;
-	typedef std::pair<Intersect, PointID> Edge;
+namespace {
 
-    Polygon() {
-        points.reserve(10);
-    }
-
-    void Append(Point& point)
+    class Polygon
     {
-        points.push_back(point);
-    }
+    public:
+        typedef Geometry::Coordinate Point;
+        typedef Geometry::Coordinate Point;
+        typedef std::vector<Point>::const_iterator PointID;
+        typedef std::pair<double, double> Intersect;
+        typedef std::pair<Intersect, PointID> Edge;
 
-    PointID GetFirstPoint() const {
-        return points.begin();
-    }
+        Polygon() {
+            points.reserve(10);
+        }
 
-    PointID GetPolygonEnd() const {
-        return points.end();
-    }
+        void Append(Point& point)
+        {
+            points.push_back(point);
+        }
 
-    unsigned GetPointCount() const {
-        return points.size();
-    }
+        PointID GetFirstPoint() const {
+            return points.begin();
+        }
 
-private:
-    std::vector<Point> points;
-};
+        PointID GetPolygonEnd() const {
+            return points.end();
+        }
+
+        size_t GetPointCount() const {
+            return points.size();
+        }
+
+    private:
+        std::vector<Point> points;
+    };
+}

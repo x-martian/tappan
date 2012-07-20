@@ -10,7 +10,7 @@ class tapPolygonAreaSuiteImpl
 public:
     tapPolygonAreaSuiteImpl()
         : g0(10, 10, 0.0, 0.0, 1.0, 1.0)        // square tile
-        , g1(10, 10, -0.3, -0.1, 1.0/9.0, 0.09) // rectangular tile
+        , g1(50, 50, -0.3, -0.1, 1.0/9.0, 0.09) // rectangular tile
         , g2(1, 1, -0.3, -0.1, 10.3, 9.7)       // all polygons are within one tile
         , g3(1, 4, 0.0001, 0.001, 10.5, 2.7)    // the polygons enter and leave tile from the edge
         , g4(1, 4, 0.0001, 0.001, 2.6, 12.7)    // the polygons enter and leave tile from the edge
@@ -157,10 +157,10 @@ public:
     {
         typedef Polygon::Point Point;
         Polygon p;
-        p.Append(Point( sqrt(2.0), 0.0));
-        p.Append(Point(0.0,  sqrt(2.0)));
-        p.Append(Point(-sqrt(2.0), 0.0));
-        p.Append(Point(0.0, -sqrt(2.0)));
+        p.Append(Point(5.0+sqrt(2.0), 5.0));
+        p.Append(Point(5.0, 5.0+sqrt(2.0)));
+        p.Append(Point(5.0-sqrt(2.0), 5.0));
+        p.Append(Point(5.0, 5.0-sqrt(2.0)));
 
         Result r0(-1.0, 100.1, 10), r1(-100.0, 555.1, 10);
         Geometry::Path path0 = tapPolygonArea<Geometry, Polygon, Result, true>::Compute(me.g0, p, r0);
@@ -177,10 +177,10 @@ public:
     {
         typedef Polygon::Point Point;
         Polygon p;
-        p.Append(Point(0.0, -sqrt(2.0)));
-        p.Append(Point(-sqrt(2.0), 0.0));
-        p.Append(Point(0.0,  sqrt(2.0)));
-        p.Append(Point( sqrt(2.0), 0.0));
+        p.Append(Point(5.0, 5.0-sqrt(2.0)));
+        p.Append(Point(5.0-sqrt(2.0), 5.0));
+        p.Append(Point(5.0, 5.0+sqrt(2.0)));
+        p.Append(Point(5.0+sqrt(2.0), 5.0));
 
         Result r0(-1.0, 100.1, 10), r1(-100.0, 555.1, 10);
         Geometry::Path path0 = tapPolygonArea<Geometry, Polygon, Result, true>::Compute(me.g0, p, r0);

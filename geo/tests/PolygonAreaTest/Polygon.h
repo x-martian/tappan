@@ -2,6 +2,8 @@
 #include <vector>
 #include "Geometry.h"
 
+namespace {
+
 class Polygon
 {
 public:
@@ -131,10 +133,12 @@ public:
 		return points.end();
 	}
 
-	unsigned GetPointCount() const {
+	size_t GetPointCount() const {
 		return points.size();
 	}
 
 private:
 	std::vector<Point> points;
 };
+
+}

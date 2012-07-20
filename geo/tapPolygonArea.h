@@ -53,7 +53,7 @@ public:
 
 		typedef C::const_iterator const_iterator;
 		const_iterator firstPolygonPoint = c.GetFirstPoint();
-		unsigned n = c.GetPointCount();
+		size_t n = c.GetPointCount();
 		if (n<3) return path;
 
 		C::const_iterator head = firstPolygonPoint, tail = c.GetPolygonEnd();

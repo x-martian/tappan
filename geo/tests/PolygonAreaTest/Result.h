@@ -2,6 +2,8 @@
 #include <map>
 #include "Geometry.h"
 
+namespace {
+
 class Result
 {
 	typedef Geometry::Weight Weight;
@@ -99,3 +101,5 @@ private:
 	unsigned m_bins;
 	Area m_total;
 };
+
+}

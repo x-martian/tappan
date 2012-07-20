@@ -1,38 +1,43 @@
 #pragma once
 #include <map>
+#include <assert.h>
 
-class Geometry
-{
-public:
-    typedef int RowIndex;
-    typedef int ColIndex;
-    typedef std::pair<RowIndex, ColIndex> Vertex;
-    typedef std::pair<Vertex, Vertex> Window;
-    typedef std::pair<double, double> Coordinate;
+namespace {
 
-    /** Create the geometric object with size, origin, and pixel resolution. */
-    Geometry(unsigned w, unsigned h)
-        : m_w(w), m_h(h)
-        , m_array(new unsigned char[w*h])
+    class Geometry
     {
-        m_array = new unsigned char[w*h];
-        memset(m_array, 0, w*h*sizeof(unsigned char));
-    }
+    public:
+        typedef int RowIndex;
+        typedef int ColIndex;
+        typedef std::pair<RowIndex, ColIndex> Vertex;
+        typedef std::pair<Vertex, Vertex> Window;
+        typedef std::pair<double, double> Coordinate;
 
-    ~Geometry()
-    {
-        delete [] m_array;
-    }
+        /** Create the geometric object with size, origin, and pixel resolution. */
+        Geometry(unsigned w, unsigned h)
+            : m_w(w), m_h(h)
+            , m_array(new unsigned char[w*h])
+        {
+            memset(m_array, 0, w*h*sizeof(unsigned char));
+        }
 
-    void SetPixel(unsigned x, unsigned y, unsigned char v) {
-        m_array[y*m_w+x] = v;
-    }
+        ~Geometry()
+        {
+            delete [] m_array;
+        }
 
-    unsigned char GetPixel(unsigned x, unsigned y) const {
-        return m_array[y*m_w+x];
-    }
+        void SetPixel(unsigned x, unsigned y, unsigned char v) {
+            assert(x<m_w);
+            assert(y<m_h);
+            m_array[y*m_w+x] = v;
+        }
 
-private:
-    unsigned m_w, m_h;
-    unsigned char* m_array;
-};
+        unsigned char GetPixel(unsigned x, unsigned y) const {
+            return m_array[y*m_w+x];
+        }
+
+    private:
+        unsigned m_w, m_h;
+        unsigned char* m_array;
+    };
+}

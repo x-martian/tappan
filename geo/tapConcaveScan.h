@@ -52,7 +52,7 @@ public:
 
     void Fill(G& geometry, const Window& win)
     {
-        unsigned n = polygon.GetPointCount();
+        size_t n = polygon.GetPointCount();
         std::vector<PointID> indices(n);
 
         // Create y-sorted array of indices ind[k] into vertex list

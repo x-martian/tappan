@@ -1,0 +1,1 @@
+This project is to take advantage of compile time code generation paradigm.  It is a collection of C++ template classes, with a bias toward application in computer graphics, sort of a collection of Graphic Gems in C++.
